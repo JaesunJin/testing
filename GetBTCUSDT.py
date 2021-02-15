@@ -9,6 +9,14 @@ class BinanceAPI:
         api_secret = key.api_secret
 
         self.client = Client(api_key, api_secret)
+        ## Set test URL
+        self.client.API_URL = 'https://testnet.binance.vision/api'
+
+        # print(self.client.get_account())
+        # get balance for a specific asset only (BTC)
+        print('BTCASSET : ', self.client.get_asset_balance(asset='BTC'))
+        # get balances for futures account
+        # print('Futures Balance : ', self.client.futures_account_balance())
 
     def get_ticker(self , pair):
         try:
