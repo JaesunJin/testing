@@ -3,21 +3,25 @@ from binance.client import Client
 
 class BinanceAPI:
     
-    def __init__(self):
+    def __init__(self, test_flag):
         print('-----init-----')
-        api_key = key.api_key
-        api_secret = key.api_secret
+
+        if test_flag == 'test':
+            api_key = key.api_key_test
+            api_secret = key.api_key_test
+        elif test_flag == 'real':
+            api_key = key.api_key_real
+            api_secret = key.api_key_real
+        else:
+            raise Exception('check test flag', test_flag)
 
         self.client = Client(api_key, api_secret)
+
         ## Set test URL
-        self.client.API_URL = 'https://testnet.binance.vision/api'
-
-        # print(self.client.get_account())
-        # get balance for a specific asset only (BTC)
-        print('BTCASSET : ', self.client.get_asset_balance(asset='BTC'))
-        # get balances for futures account
-        # print('Futures Balance : ', self.client.futures_account_balance())
-
+        if test_flag == 'test':
+            self.client.API_URL = 'https://testnet.binance.vision/api'
+            print('-----running in test mode-----')
+    
     def get_ticker(self , pair):
         try:
             value = self.client.get_ticker(symbol=pair)
@@ -35,15 +39,13 @@ class BinanceAPI:
             return
 
 def main():
-    binance_set = BinanceAPI()
-    
+    ## set 'test' or 'real'
+    binance_set = BinanceAPI('test')
+
     ticker = binance_set.get_ticker('BTCUSDT')
-    
+
     for ticker_key, ticker_value in ticker.items():
         print(ticker_key, ':', ticker_value)
-
-    ## asset_dict = prv_set.get_asset('BTC')
-    ## print(asset_dict['free'])
 
 if __name__ == '__main__':
     main()
